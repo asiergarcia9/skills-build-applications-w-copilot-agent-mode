@@ -1,5 +1,5 @@
 /**
- * Seed command: populate octofit_db with initial test data.
+ * Seed the octofit_db database with test data.
  * Run with: npm run seed
  *
  * This seed script connects to octofit_db via mongoose, clears all
