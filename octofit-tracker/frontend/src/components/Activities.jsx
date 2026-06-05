@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
-import { fetchList } from '../api';
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME;
+const API_URL = codespaceName && codespaceName !== 'undefined'
+  ? `https://${codespaceName}-8000.app.github.dev/api/activities`
+  : 'http://localhost:8000/api/activities';
 
 export default function Activities() {
   const [activities, setActivities] = useState([]);
@@ -7,7 +11,9 @@ export default function Activities() {
   const [loading, setLoading]       = useState(true);
 
   useEffect(() => {
-    fetchList('/api/activities')
+    fetch(API_URL)
+      .then((r) => { if (!r.ok) throw new Error(`API error ${r.status}`); return r.json(); })
+      .then((d) => Array.isArray(d) ? d : d.results ?? d)
       .then(setActivities)
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
