@@ -14,11 +14,19 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+// Build Codespaces-aware API base URL
+const CODESPACE_NAME = process.env.CODESPACE_NAME;
+const API_BASE_URL = CODESPACE_NAME
+  ? `https://${CODESPACE_NAME}-8000.app.github.dev`
+  : `http://localhost:${PORT}`;
+
+console.log(`API base URL: ${API_BASE_URL}`);
+
 app.use(cors());
 app.use(express.json());
 
 app.get('/health', (_req, res) => {
-  res.json({ status: 'ok' });
+  res.json({ status: 'ok', apiBaseUrl: API_BASE_URL });
 });
 
 app.use('/api/users',       usersRouter);
